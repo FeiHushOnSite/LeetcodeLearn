@@ -1,5 +1,9 @@
 package leetcode_algorithm;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @program: LeetcodeLearn
  * @className: MinSubstringsInPartition
@@ -14,8 +18,39 @@ package leetcode_algorithm;
  **/
 public class MinSubstringsInPartition {
 
-    public static void main(String[] args) {
+    /**
+     * 0x3f3f3f3f的十进制是1061109567，是10^9级别的，而一般场合下的数据都是小于10^9的，所以它可以作为无穷大使用而不致出现数据大于无穷大的情形。
+     * 一个0x3f3f3f3f可以减少考虑的时间，一般情况下就可以当作是一个无穷大的数去用。
+     * int型整数的最大值 int 型是4个字节，一个字节是8位，0x3f 是 00111111
+     * 4个0x3f 也就是int型整数的无穷大 但并不是最大值
+     */
+    static final int INF = 0x3f3f3f3f;
 
+    public static void main(String[] args) {
+        String s = "fabccddg";
+        System.out.println(partitionStr(s));
     }
 
+    public static int partitionStr(String s) {
+        int len = s.length();
+        int[] d = new int[len + 1];
+        Arrays.fill(d, INF);
+        //为了方便编写代码，数组 d 下标从 1 开始，d[0] 初始化为 0，其余所有状态初始化为正无穷。最后答案为 d[n]。
+        d[0] = 0;
+        for (int i = 1; i <= len; i++) {
+            Map<Character, Integer> occCnt = new HashMap<>();
+            int maxCnt = 0;
+            for (int j = i; j >= 1; j--) {
+                occCnt.put(s.charAt(j - 1), occCnt.getOrDefault(s.charAt(j - 1), 0) + 1);
+                // 直接判断子串是否为平衡字符串复杂度较高，并且有大量的重复计算。因此考虑每次枚举i之后，再从i开始倒序枚举j,过程中维护
+                // 一个哈希表occ_cnt，用于存储每种字符出现的次数。另外，为了判断快速所有字符出现的次数是否相等
+                maxCnt = Math.max(maxCnt, occCnt.get(s.charAt(j - 1)));
+                if(maxCnt * occCnt.size() == (i - j + 1) && d[j - 1] != INF) {
+                    // 动态规划 设置d[i]为将以i结尾的前缀字符串划分平衡字符串最少个数。那么每次判定s[j]至s[i]之间构成的子串为平衡字符串之后的转移方程
+                    d[i]= Math.min(d[i], d[j - 1] + 1);
+                }
+            }
+        }
+        return d[len];
+    }
 }
