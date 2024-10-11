@@ -11,7 +11,8 @@ package java_model_design.singleton;
 public class HungrySingletonTest {
 
     public static void main(String[] args) {
-
+        HungrySingleton hungrySingleton = HungrySingleton.getInstance();
+        System.out.println(hungrySingleton);
     }
 }
 

@@ -19,12 +19,12 @@ public class ListNode {
         this.val = val;
     }
 
-    public void add(int newval) {
-        ListNode newNode = new ListNode(newval);
+    public void add(int newVal) {
+        ListNode newNode = new ListNode(newVal);
         if(this.next == null) {
             this.next = newNode;
         } else {
-            this.next.add(newval);
+            this.next.add(newVal);
         }
     }
 
@@ -35,19 +35,35 @@ public class ListNode {
             this.next.print();
         }
     }
-}
-class solution {
+
+    public void deleteNode(ListNode node) {
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+
+    public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode l1 = headA, l2 = headB;
+        while(l1 != l2) {
+            l1 = (l1 == null) ? headB : l1.next;
+            l2 = (l2 == null) ? headA : l2.next;
+        }
+        return l1;
+    }
+
     public static void main(String[] args) {
         ListNode listNode = new ListNode(4);
         listNode.add(5);
         listNode.add(1);
         listNode.add(9);
-        deleteNode(listNode);
+        listNode.deleteNode(listNode);
         listNode.print();
-    }
 
-    public static void deleteNode(ListNode node) {
-        node.val = node.next.val;
-        node.next = node.next.next;
+        ListNode headA = new ListNode(1);
+        headA.add(2);
+        ListNode headB = new ListNode(1);
+        headB.add(2);
+        headB.add(3);
+        ListNode intersectionNode = getIntersectionNode(headA, headB);
+        intersectionNode.print();
     }
 }
